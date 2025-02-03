@@ -47,6 +47,9 @@ fi
 find $DESTINATION -type f -exec chmod 644 {} \;
 find $DESTINATION -type d -exec chmod 755 {} \;
 
+# Establecer permisos 777 para los directorios específicos
+chmod -R 777 $DESTINATION/addons $DESTINATION/etc $DESTINATION/postgresql
+
 # Solicitar confirmación para iniciar los contenedores
 docker-compose -f $DESTINATION/docker-compose.yml up -d
 # Obtener la dirección IP local
