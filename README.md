@@ -1,40 +1,50 @@
-# Installing Odoo 17.0 with one command (Supports multiple Odoo instances on one server).
+Esta implementaci{on esta basada en la realizada por https://github.com/minhng92/odoo-17-docker-compose. 
+Cambios realizados, actualizacion de la version del docker utilizado.
+Cambios en el run.sh para mis ajustes personales.
+Cambio en la forma de organizar el despliegue de los dockerfile.
+Implementacion de [mi](https://min.io/?), para mejorar el control de las imagenes y la portabilidad de la implementacion entre servidores.
+Se hace el cambio para postgres 15 porque es lo recomendado en la documentacion de odoo.
 
-## Quick Installation
+---
+# Instalación de Odoo 17.0 con un solo comando (Admite múltiples instancias de Odoo en un solo servidor).
 
-Install [docker](https://docs.docker.com/get-docker/) and [docker-compose](https://docs.docker.com/compose/install/) yourself, then run the following to set up first Odoo instance @ `localhost:10017` (default master password: `minhng.info`):
+## Instalación rápida
+
+Instale [docker](https://docs.docker.com/get-docker/) y [docker-compose](https://docs.docker.com/compose/install/) por su cuenta, luego ejecute lo siguiente para configurar la primera instancia de Odoo en `localhost:10017` (contraseña maestra predeterminada: `minhng.info`):
+- Si desea iniciar el servidor con un puerto diferente, cambie **10017** por otro valor en **docker-compose.yml** dentro del directorio principal, el puerto por defecto del odoo es el 8069, para esta implementacion se utiliza el puerto 10017, para ser expuesto por el docker, si lo desea puede cambiarlo en la siguiente linea.
+- Recuerde que puede modificar el docker-compose.yml para ajustar las configuraciones de sus docker una vez instalado.
 
 ``` bash
 curl -s https://raw.githubusercontent.com/tomasecastro/odoo-17-docker-compose/master/run.sh | sudo bash -s odoo-one 10017 20017
 ```
-and/or run the following to set up another Odoo instance @ `localhost:11017` (default master password: `minhng.info`):
+y/o ejecute lo siguiente para configurar otra instancia de Odoo en `localhost:11017` (contraseña maestra predeterminada: `minhng.info`):
 
 ``` bash
 curl -s https://raw.githubusercontent.com/tomasecastro/odoo-17-docker-compose/master/run.sh | sudo bash -s odoo-two 11017 21017
 ```
 
-Some arguments:
-* First argument (**odoo-one**): Odoo deploy folder
-* Second argument (**10017**): Odoo port
-* Third argument (**20017**): live chat port
+Algunos argumentos:
+* Primer argumento (**odoo-one**): Carpeta de despliegue de Odoo
+* Segundo argumento (**10017**): Puerto de Odoo
+* Tercer argumento (**20017**): Puerto del chat en vivo
 
-If `curl` is not found, install it:
+Si `curl` no se encuentra, instálelo:
 
 ``` bash
 $ sudo apt-get install curl
-# or
+# o
 $ sudo yum install curl
 ```
 
-## Usage
+## Uso
 
-Start the container:
+Iniciar el contenedor:
 ``` sh
 docker-compose up
 ```
-Then open `localhost:10017` to access Odoo 17.
+Luego abra `localhost:10017` o `IP_EQUIPO_DONDE_EJECUTA_EL_DOCKER:10017` para acceder a Odoo 17.
 
-- **If you get any permission issues**, change the folder permission to make sure that the container is able to access the directory:
+- **Si tiene problemas de permisos**, cambie los permisos de la carpeta para asegurarse de que el contenedor pueda acceder al directorio, en el equipo que ejecuta los docker:
 
 ``` sh
 $ sudo chmod -R 777 addons
@@ -42,70 +52,71 @@ $ sudo chmod -R 777 etc
 $ sudo chmod -R 777 postgresql
 ```
 
-- If you want to start the server with a different port, change **10017** to another value in **docker-compose.yml** inside the parent dir:
+- Si desea iniciar el servidor con un puerto diferente, cambie **10017** por otro valor en **docker-compose.yml** dentro del directorio principal, el puerto por defecto del odoo es el 8069, si desea realizar cambios en el puerto:
 
 ```
 ports:
  - "10017:8069"
 ```
 
-- To run Odoo container in detached mode (be able to close terminal without stopping Odoo):
+- Para ejecutar el contenedor de Odoo en modo separado (para poder cerrar la terminal sin detener Odoo):
 
 ```
 docker-compose up -d
 ```
 
-- To Use a restart policy, i.e. configure the restart policy for a container, change the value related to **restart** key in **docker-compose.yml** file to one of the following:
-   - `no` =	Do not automatically restart the container. (the default)
-   - `on-failure[:max-retries]` =	Restart the container if it exits due to an error, which manifests as a non-zero exit code. Optionally, limit the number of times the Docker daemon attempts to restart the container using the :max-retries option.
-  - `always` =	Always restart the container if it stops. If it is manually stopped, it is restarted only when Docker daemon restarts or the container itself is manually restarted. (See the second bullet listed in restart policy details)
-  - `unless-stopped`	= Similar to always, except that when the container is stopped (manually or otherwise), it is not restarted even after Docker daemon restarts.
+- Para usar una política de reinicio, es decir, configurar la política de reinicio de un contenedor, cambie el valor relacionado con la clave **restart** en el archivo **docker-compose.yml** a una de las siguientes opciones:
+   - `no` = No reiniciar automáticamente el contenedor. (valor predeterminado)
+   - `on-failure[:max-retries]` = Reiniciar el contenedor si se detiene debido a un error, lo que se manifiesta como un código de salida distinto de cero. Opcionalmente, limite el número de intentos de reinicio con la opción `:max-retries`.
+   - `always` = Siempre reiniciar el contenedor si se detiene. Si se detiene manualmente, solo se reiniciará cuando se reinicie el daemon de Docker o se reinicie manualmente el contenedor. (Consulte el segundo punto en los detalles de la política de reinicio).
+   - `unless-stopped` = Similar a `always`, excepto que cuando el contenedor se detiene (manualmente o de otra manera), no se reinicia incluso después de que se reinicie el daemon de Docker.
+
 ```
- restart: always             # run as a service
+ restart: always             # ejecutar como un servicio
 ```
 
-- To increase maximum number of files watching from 8192 (default) to **524288**. In order to avoid error when we run multiple Odoo instances. This is an *optional step*. These commands are for Ubuntu user:
+- Para aumentar el número máximo de archivos en observación de **8192** (predeterminado) a **524288**, con el fin de evitar errores al ejecutar múltiples instancias de Odoo. Este paso es *opcional*. Estos comandos son para usuarios de Ubuntu:
 
 ```
 $ if grep -qF "fs.inotify.max_user_watches" /etc/sysctl.conf; then echo $(grep -F "fs.inotify.max_user_watches" /etc/sysctl.conf); else echo "fs.inotify.max_user_watches = 524288" | sudo tee -a /etc/sysctl.conf; fi
-$ sudo sysctl -p    # apply new config immediately
+$ sudo sysctl -p    # aplicar nueva configuración inmediatamente
 ``` 
 
-## Custom addons
+## Complementos personalizados
 
-The **addons/** folder contains custom addons. Just put your custom addons if you have any.
+La carpeta **addons/** contiene complementos personalizados. Simplemente coloque sus complementos personalizados si tiene alguno.
 
-## Odoo configuration & log
+## Configuración y registro de Odoo
 
-* To change Odoo configuration, edit file: **etc/odoo.conf**.
-* Log file: **etc/odoo-server.log**
-* Default database password (**admin_passwd**) is `minhng.info`, please change it @ [etc/odoo.conf#L60](/etc/odoo.conf#L60)
+* Para cambiar la configuración de Odoo, edite el archivo: **etc/odoo.conf**.
+* Archivo de registro: **etc/odoo-server.log**
+* La contraseña de la base de datos por defecto (**admin_passwd**) es `minhng.info`, cámbiela en [etc/odoo.conf#L60](/etc/odoo.conf#L60).
 
-## Odoo container management
+## Administración del contenedor de Odoo
 
-**Run Odoo**:
+**Ejecutar Odoo**:
 
 ``` bash
 docker-compose up -d
 ```
 
-**Restart Odoo**:
+**Reiniciar Odoo**:
 
 ``` bash
 docker-compose restart
 ```
 
-**Stop Odoo**:
+**Detener Odoo**:
 
 ``` bash
 docker-compose down
 ```
 
-## Live chat
+## Chat en vivo
 
-In [docker-compose.yml#L21](docker-compose.yml#L21), we exposed port **20017** for live-chat on host.
+En [docker-compose.yml#L21](docker-compose.yml#L21), se expuso el puerto **20017** para el chat en vivo en el host.
 
-Configuring **nginx** to activate live chat feature (in production):
+Configuración de **nginx** para activar la función de chat en vivo (en producción):
 
 ``` conf
 #...
@@ -124,7 +135,7 @@ server {
 * odoo:17
 * postgres:16
 
-## Odoo 17.0 screenshots after successful installation.
+## Capturas de pantalla de Odoo 17.0 después de una instalación exitosa.
 
 <img src="screenshots/odoo-17-welcome-screenshot.png" width="50%">
 
@@ -133,3 +144,4 @@ server {
 <img src="screenshots/odoo-17-sales-screen.png" width="100%">
 
 <img src="screenshots/odoo-17-product-form.png" width="100%">
+
