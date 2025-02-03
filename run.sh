@@ -48,20 +48,8 @@ find $DESTINATION -type f -exec chmod 644 {} \;
 find $DESTINATION -type d -exec chmod 755 {} \;
 
 # Solicitar confirmación para iniciar los contenedores
-read -p "¿Deseas iniciar los contenedores de Docker ahora? (s/n): " respuesta
-case $respuesta in
-  [Ss]* )
-    # Ejecutar Odoo
-    docker-compose -f $DESTINATION/docker-compose.yml up -d
-    # Obtener la dirección IP local
-    IP_ADDRESS=$(hostname -I | awk '{print $1}')
-    # Mostrar información de acceso
-    echo "Odoo iniciado en http://$IP_ADDRESS:$PORT | Contraseña maestra: minhng.info | Puerto de chat en vivo: $CHAT"
-    ;;
-  [Nn]* )
-    echo "Los contenedores no se han iniciado. Puedes iniciarlos manualmente con 'docker-compose up -d'."
-    ;;
-  * )
-    echo "Respuesta no válida. Los contenedores no se han iniciado."
-    ;;
-esac
+docker-compose -f $DESTINATION/docker-compose.yml up -d
+# Obtener la dirección IP local
+IP_ADDRESS=$(hostname -I | awk '{print $1}')
+# Mostrar información de acceso
+echo "Odoo iniciado en http://$IP_ADDRESS:$PORT | Contraseña maestra: minhng.info | Puerto de chat en vivo: $CHAT"
