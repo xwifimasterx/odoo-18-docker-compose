@@ -1,24 +1,28 @@
 #!/bin/bash
+
+# Cargar variables desde el archivo .env
+export $(grep -v '^#' .env | xargs)
+
 DESTINATION=$1
 PORT=$2
 CHAT=$3
 
-# Clone Odoo directory
+# Clonar el directorio de Odoo
 git clone --depth=1 https://github.com/tomasecastro/odoo-17-docker-compose $DESTINATION
 rm -rf $DESTINATION/.git
 
-# Create PostgreSQL directory
+# Crear el directorio de PostgreSQL
 mkdir -p $DESTINATION/postgresql
 
-# Change ownership to current user and set restrictive permissions for security
+# Cambiar la propiedad al usuario actual y establecer permisos restrictivos por seguridad
 sudo chown -R $USER:$USER $DESTINATION
-sudo chmod -R 700 $DESTINATION  # Only the user has access
+sudo chmod -R 700 $DESTINATION  # Solo el usuario tiene acceso
 
-# Check if running on macOS
+# Verificar si se está ejecutando en macOS
 if [[ "$OSTYPE" == "darwin"* ]]; then
-  echo "Running on macOS. Skipping inotify configuration."
+  echo "Ejecutando en macOS. Omitiendo configuración de inotify."
 else
-  # System configuration
+  # Configuración del sistema
   if grep -qF "fs.inotify.max_user_watches" /etc/sysctl.conf; then
     echo $(grep -F "fs.inotify.max_user_watches" /etc/sysctl.conf)
   else
@@ -27,23 +31,37 @@ else
   sudo sysctl -p
 fi
 
-# Set ports in docker-compose.yml
-# Update docker-compose configuration
+# Establecer puertos en docker-compose.yml
+# Actualizar la configuración de docker-compose
 if [[ "$OSTYPE" == "darwin"* ]]; then
-  # macOS sed syntax
+  # Sintaxis de sed para macOS
   sed -i '' 's/10017/'$PORT'/g' $DESTINATION/docker-compose.yml
   sed -i '' 's/20017/'$CHAT'/g' $DESTINATION/docker-compose.yml
 else
-  # Linux sed syntax
+  # Sintaxis de sed para Linux
   sed -i 's/10017/'$PORT'/g' $DESTINATION/docker-compose.yml
   sed -i 's/20017/'$CHAT'/g' $DESTINATION/docker-compose.yml
 fi
 
-# Set file and directory permissions after installation
+# Establecer permisos de archivos y directorios después de la instalación
 find $DESTINATION -type f -exec chmod 644 {} \;
 find $DESTINATION -type d -exec chmod 755 {} \;
 
-# Run Odoo
-docker-compose -f $DESTINATION/docker-compose.yml up -d
-
-echo "Odoo started at http://localhost:$PORT | Master Password: minhng.info | Live chat port: $CHAT"
+# Solicitar confirmación para iniciar los contenedores
+read -p "¿Deseas iniciar los contenedores de Docker ahora? (s/n): " respuesta
+case $respuesta in
+  [Ss]* )
+    # Ejecutar Odoo
+    docker-compose -f $DESTINATION/docker-compose.yml up -d
+    # Obtener la dirección IP local
+    IP_ADDRESS=$(hostname -I | awk '{print $1}')
+    # Mostrar información de acceso
+    echo "Odoo iniciado en http://$IP_ADDRESS:$PORT | Contraseña maestra: minhng.info | Puerto de chat en vivo: $CHAT"
+    ;;
+  [Nn]* )
+    echo "Los contenedores no se han iniciado. Puedes iniciarlos manualmente con 'docker-compose up -d'."
+    ;;
+  * )
+    echo "Respuesta no válida. Los contenedores no se han iniciado."
+    ;;
+esac
