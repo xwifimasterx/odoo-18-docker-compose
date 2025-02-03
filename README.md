@@ -130,10 +130,27 @@ server {
 #...
 ```
 
+## Configuracion inicial del odoo.
+Cuando completada la instalacion y ejecucion del odoo, se solicita que indique la siguiente informacion para completar la instalacion y configuacion.
+Se nos pide que completemos el proceso de configucion en la siguiente pantalla.
+Agregando el Master Password
+El nombre que deseamos para nuestra base de datos. Es recomendable que el nombre sea relacionado con la empresa y colocar la Fecha para futuros controles. ej empresa_2025
+en email. realmente se refiere al usuario que usaras como admin, como el servidor de correo no esta configurado se recomienda usar un nombre de usuario, mas generico que admin.
+Asignar una contraseña a este usuario.
+El idioma en que inicialmente se instalar el Odoo, recomiendo en Ingles y posteriormente, lo cambies si es necesario.
+El pais donde se utilizara.
+
+Y si lo quieres para probar o demo activar el check de datos de Demo. En caso contrario dejarlo sin marcar.
+Y ejecutamos crear una nueva base de datos. 
+
+Nota. Esta guia no cubre el escenario donde se tenga bases de datos respaldadas previamente.
+
+<img src="screenshots/odoo-17-welcome-screenshot.png" width="50%">
+
 ## docker-compose.yml
 
 * odoo:17
-* postgres:16
+* postgres:15
 
 ## Capturas de pantalla de Odoo 17.0 después de una instalación exitosa.
 
@@ -144,4 +161,5 @@ server {
 <img src="screenshots/odoo-17-sales-screen.png" width="100%">
 
 <img src="screenshots/odoo-17-product-form.png" width="100%">
+
 
