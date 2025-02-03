@@ -48,9 +48,9 @@ Luego abra `localhost:10017` o `IP_EQUIPO_DONDE_EJECUTA_EL_DOCKER:10017` para ac
 - **Si tiene problemas de permisos**, cambie los permisos de la carpeta para asegurarse de que el contenedor pueda acceder al directorio, en el equipo que ejecuta los docker:
 
 ``` sh
-$ sudo chmod -R 777 addons
-$ sudo chmod -R 777 etc
-$ sudo chmod -R 777 postgresql
+$ sudo chmod -R 775 addons
+$ sudo chmod -R 775 etc
+$ sudo chmod -R 775 postgresql
 ```
 
 - Si desea iniciar el servidor con un puerto diferente, cambie **10017** por otro valor en **docker-compose.yml** dentro del directorio principal, el puerto por defecto del odoo es el 8069, si desea realizar cambios en el puerto:
