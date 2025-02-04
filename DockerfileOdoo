@@ -1,0 +1,22 @@
+FROM odoo:17.0
+
+# Instalar dependencias necesarias para s3fs
+RUN apt-get update && apt-get install -y \
+    s3fs \
+    && rm -rf /var/lib/apt/lists/*
+
+# Crear el directorio para el punto de montaje
+RUN mkdir /mnt/minio
+
+# Establecer variables de entorno para las credenciales de MinIO
+ENV MINIO_ACCESS_KEY= \
+    MINIO_SECRET_KEY= \
+    MINIO_URL=http://minio:9000 \
+    MINIO_BUCKET=odoo-bucket
+
+# Script de entrada personalizado para montar s3fs y luego iniciar Odoo
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+# Usar el script de entrada personalizado como punto de entrada
+ENTRYPOINT ["/entrypoint.sh"]
