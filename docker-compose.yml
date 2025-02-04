@@ -1,6 +1,7 @@
 services:
   db:
     image: ${POSTGRES_IMAGE}
+    user: root
     container_name: postgres_db
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
@@ -8,14 +9,36 @@ services:
       - POSTGRES_DB=${POSTGRES_DB}
       - TZ=${TZ}
     restart: always
+    ports:
+      - "${POSTGRES_PORT}:5432"  # Puerto PostgreSQL desde la variable de entorno
     volumes:
       - ./postgresql:/var/lib/postgresql/data
+
+  minio:
+    image: minio/minio
+    container_name: minio
+    environment:
+      - MINIO_ROOT_USER=${MINIO_ROOT_USER}
+      - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
+      - MINIO_ACCESS_KEY= ${MINIO_ACCESS_KEY}
+      - MINIO_SECRET_KEY= ${MINIO_SECRET_KEY}
+      - MINIO_DOMAIN= ${MINIO_DOMAIN}
+      - MINIO_VIRTUAL_HOST= ${MINIO_VIRTUAL_HOST}
+
+    restart: always
+    ports:
+      - "${MINIO_PORT}:9000"    # Puerto HTTP de Minio desde la variable de entorno
+      - "${MINIO_ADMIN_PORT}:9001"  # Puerto admin de Minio desde la variable de entorno
+    volumes:
+      - ./minio/data:/data
+    command: server /data --console-address ":9001"
 
   odoo17:
     image: ${ODOO_IMAGE}
     container_name: odoo17_app
     depends_on:
       - db
+      - minio
     ports:
       - "${ODOO_PORT}:8069"
       - "${ODOO_LONGPOLLING_PORT}:8072"
@@ -25,6 +48,8 @@ services:
       - USER=${POSTGRES_USER}
       - PASSWORD=${POSTGRES_PASSWORD}
       - TZ=${TZ}
+      - MINIO_URL=http://minio:${MINIO_PORT}  # URL de Minio para Odoo
+
     volumes:
       - ./addons:/mnt/extra-addons
       - ./etc:/etc/odoo
