@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# Cargar variables desde el archivo .env
-export $(grep -v '^#' .env | xargs)
-
 DESTINATION=$1
 PORT=$2
 CHAT=$3
@@ -18,29 +15,62 @@ mkdir -p $DESTINATION/postgresql
 sudo chown -R $USER:$USER $DESTINATION
 sudo chmod -R 700 $DESTINATION  # Solo el usuario tiene acceso
 
-# Verificar si se está ejecutando en macOS
-if [[ "$OSTYPE" == "darwin"* ]]; then
-  echo "Ejecutando en macOS. Omitiendo configuración de inotify."
+# Generar claves de Minio dinámicamente si no están definidas en el archivo .env
+if ! grep -q "^POSTGRES_PASSWORD=" $DESTINATION/.env; then
+  export POSTGRES_PASSWORD=$(openssl rand -base64 12)  # Generar una clave de acceso aleatoria
+  echo "POSTGRES_PASSWORD=$POSTGRES_PASSWORD" >> $DESTINATION/.env
 else
-  # Configuración del sistema
-  if grep -qF "fs.inotify.max_user_watches" /etc/sysctl.conf; then
-    echo $(grep -F "fs.inotify.max_user_watches" /etc/sysctl.conf)
-  else
-    echo "fs.inotify.max_user_watches = 524288" | sudo tee -a /etc/sysctl.conf
-  fi
-  sudo sysctl -p
+  # Si ya existe, actualizar el valor
+  sed -i "s#^POSTGRES_PASSWORD=.*#POSTGRES_PASSWORD=$(openssl rand -base64 12)#" $DESTINATION/.env
 fi
 
-# Establecer puertos en docker-compose.yml
-# Actualizar la configuración de docker-compose
-if [[ "$OSTYPE" == "darwin"* ]]; then
-  # Sintaxis de sed para macOS
-  sed -i '' 's/10017/'$PORT'/g' $DESTINATION/docker-compose.yml
-  sed -i '' 's/20017/'$CHAT'/g' $DESTINATION/docker-compose.yml
+if ! grep -q "^MINIO_ROOT_USER=" $DESTINATION/.env; then
+  export MINIO_ROOT_USER=$(openssl rand -base64 12)  # Generar una clave de acceso aleatoria
+  echo "MINIO_ROOT_USER=$MINIO_ROOT_USER" >> $DESTINATION/.env
 else
-  # Sintaxis de sed para Linux
-  sed -i 's/10017/'$PORT'/g' $DESTINATION/docker-compose.yml
-  sed -i 's/20017/'$CHAT'/g' $DESTINATION/docker-compose.yml
+  # Si ya existe, actualizar el valor
+  sed -i "s#^MINIO_ROOT_USER=.*#MINIO_ROOT_USER=$(openssl rand -base64 12)#" $DESTINATION/.env
+fi
+
+if ! grep -q "^MINIO_ROOT_PASSWORD=" $DESTINATION/.env; then
+  export MINIO_ROOT_PASSWORD=$(openssl rand -base64 16)  # Generar una contraseña aleatoria
+  echo "MINIO_ROOT_PASSWORD=$MINIO_ROOT_PASSWORD" >> $DESTINATION/.env
+else
+  # Si ya existe, actualizar el valor
+  sed -i "s#^MINIO_ROOT_PASSWORD=.*#MINIO_ROOT_PASSWORD=$(openssl rand -base64 16)#" $DESTINATION/.env
+fi
+
+if ! grep -q "^MINIO_ACCESS_KEY=" $DESTINATION/.env; then
+  export MINIO_ACCESS_KEY=$(openssl rand -base64 12)  # Generar una clave de acceso aleatoria
+  echo "MINIO_ACCESS_KEY=$MINIO_ACCESS_KEY" >> $DESTINATION/.env
+else
+  # Si ya existe, actualizar el valor
+  sed -i "s#^MINIO_ACCESS_KEY=.*#MINIO_ACCESS_KEY=$(openssl rand -base64 12)#" $DESTINATION/.env
+fi
+
+if ! grep -q "^MINIO_SECRET_KEY=" $DESTINATION/.env; then
+  export MINIO_SECRET_KEY=$(openssl rand -base64 16)  # Generar una contraseña aleatoria
+  echo "MINIO_SECRET_KEY=$MINIO_SECRET_KEY" >> $DESTINATION/.env
+else
+  # Si ya existe, actualizar el valor
+  sed -i "s#^MINIO_SECRET_KEY=.*#MINIO_SECRET_KEY=$(openssl rand -base64 16)#" $DESTINATION/.env
+fi
+
+# Actualizar las variables ODOO_PORT y ODOO_LONGPOLLING_PORT en el archivo .env
+if ! grep -q "^ODOO_PORT=" $DESTINATION/.env; then
+  export ODOO_PORT=$(openssl rand -base64 16)  # Generar una contraseña aleatoria
+  echo "ODOO_PORT=$PORT" >> $DESTINATION/.env
+else
+  # Si ya existe, actualizar el valor
+  sed -i "s#^ODOO_PORT=.*#ODOO_PORT=$PORT#" $DESTINATION/.env
+fi
+
+if ! grep -q "^ODOO_LONGPOLLING_PORT=" $DESTINATION/.env; then
+  export ODOO_LONGPOLLING_PORT=$(openssl rand -base64 16)  # Generar una contraseña aleatoria
+  echo "ODOO_LONGPOLLING_PORT=$CHAT" >> $DESTINATION/.env
+else
+  # Si ya existe, actualizar el valor
+  sed -i "s#^ODOO_LONGPOLLING_PORT=.*#ODOO_LONGPOLLING_PORT=$CHAT#" $DESTINATION/.env
 fi
 
 # Establecer permisos de archivos y directorios después de la instalación
@@ -50,9 +80,12 @@ find $DESTINATION -type d -exec chmod 755 {} \;
 # Establecer permisos 777 para los directorios específicos
 chmod -R 777 $DESTINATION/addons $DESTINATION/etc $DESTINATION/postgresql
 
-# Solicitar confirmación para iniciar los contenedores
-docker-compose -f $DESTINATION/docker-compose.yml up -d
+# Ejecutar Odoo
+#docker-compose -f $DESTINATION/docker-compose.yml up -d
+
 # Obtener la dirección IP local
 IP_ADDRESS=$(hostname -I | awk '{print $1}')
+
 # Mostrar información de acceso
 echo "Odoo iniciado en http://$IP_ADDRESS:$PORT | Contraseña maestra: minhng.info | Puerto de chat en vivo: $CHAT"
+echo "El minIOiniciado en http://$IP_ADDRESS:9001 | Usuario por defecto: admin, y la contraseña maestra: $MINIO_ROOT_PASSWORD"
