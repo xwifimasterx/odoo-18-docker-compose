@@ -153,7 +153,7 @@ Description=Montar el bucket S3 odoo-bucket usando s3fs
 After=network.target
 
 [Service]
-ExecStartPre=/bin/bash -c "until docker ps | grep -q 'minio'; do echo 'Esperando a que el contenedor minio esté arriba...'; sleep 5; done"
+ExecStartPre=/bin/sh -c "until docker ps | grep -q 'minio'; do echo 'Esperando a que el contenedor minio esté arriba...'; sleep 5; done"
 ExecStart=/usr/bin/s3fs odoo-bucket $MINIO_DIR -o passwd_file=$BASE_DIR/$DESTINATION/.passwd-s3fs -o host=http://$IP_ADDRESS:9000 -o endpoint=us-east-1 -o use_path_request_style -o allow_other
 Restart=always
 User=$USER
