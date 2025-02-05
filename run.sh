@@ -19,9 +19,6 @@ mkdir -p $DESTINATION/postgresql
 sudo chown -R $USER:$USER $DESTINATION
 sudo chmod -R 700 $DESTINATION  # Solo el usuario tiene acceso
 
-
-
-
 # Generar claves de Minio dinámicamente si no están definidas en el archivo .env
 if ! grep -q "^POSTGRES_PASSWORD=" $DESTINATION/.env; then
   export POSTGRES_PASSWORD=$(openssl rand -base64 12)  # Generar una clave de acceso aleatoria

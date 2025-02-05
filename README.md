@@ -148,6 +148,15 @@ Nota. Esta guia no cubre el escenario donde se tenga bases de datos respaldadas 
 
 <img src="screenshots/odoo-17-welcome-screenshot.png" width="50%">
 
+## Para remover el servicio cliente de MinIO del Host
+
+sudo umount -l RUTA_PATH_DOCKER/odoo/odoo-data
+sudo systemctl stop s3fs-odoo-bucket
+sudo systemctl disable s3fs-odoo-bucket
+sudo rm /etc/systemd/system/s3fs-odoo-bucket.service
+sudo systemctl daemon-reload
+sudo apt remove --purge s3fs
+
 ## docker-compose.yml
 
 * odoo:17
