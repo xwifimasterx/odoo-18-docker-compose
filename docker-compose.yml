@@ -57,9 +57,9 @@ services:
       - MINIO_SECRET_KEY=${MINIO_SECRET_KEY} # Reemplaza <SECRET_KEY> con tu clave secreta de MinIO
       - MINIO_BUCKET=odoo-bucket  # Nombre del bucket en MinIO donde se almacenarán los archivos
     volumes:
-      - ./odoo-data:/var/lib/odoo
-      - ./addons:/mnt/extra-addons
-      - ./etc:/etc/odoo
+      - ./odoo/odoo-data:/var/lib/odoo
+      - ./odoo/addons:/mnt/extra-addons
+      - ./odoo/etc:/etc/odoo
 #      - ./filestore:/mnt/minio  # Montar el bucket de MinIO en el filestore de Odoo
 
     restart: always

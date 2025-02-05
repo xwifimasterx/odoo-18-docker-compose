@@ -3,7 +3,7 @@
 DESTINATION=$1
 PORT=$2
 CHAT=$3
-MINIO_PATH=$DESTINATION/odoo-data
+MINIO_PATH=$DESTINATION/odoo/odoo-data
 # Obtener el nombre de usuario y grupo actuales
 USER=$(whoami)
 GROUP=$(id -gn $USER)

@@ -89,9 +89,9 @@ La carpeta **addons/** contiene complementos personalizados. Simplemente coloque
 
 ## Configuración y registro de Odoo
 
-* Para cambiar la configuración de Odoo, edite el archivo: **etc/odoo.conf**.
-* Archivo de registro: **etc/odoo-server.log**
-* La contraseña de la base de datos por defecto (**admin_passwd**) es `minhng.info`, cámbiela en [etc/odoo.conf#L60](/etc/odoo.conf#L60).
+* Para cambiar la configuración de Odoo, edite el archivo: **odoo/etc/odoo.conf**.
+* Archivo de registro: **odoo/etc/odoo-server.log**
+* La contraseña de la base de datos por defecto (**admin_passwd**) es `minhng.info`, cámbiela en [odoo/etc/odoo.conf#L60](/odoo/etc/odoo.conf#L60).
 
 ## Administración del contenedor de Odoo
 
