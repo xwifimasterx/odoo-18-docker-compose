@@ -33,12 +33,16 @@ services:
       - ./minio/data:/data
     command: server /data --console-address ":9001"
 
-  odoo17:
-    image: ${ODOO_IMAGE}
+  odoo:
+    build:
+      context: .
+      dockerfile: DockerfileOdoo
     container_name: odoo17_app
     depends_on:
       - db
       - minio
+    devices:
+      - "/dev/fuse"
     ports:
       - "${ODOO_PORT}:8069"
       - "${ODOO_LONGPOLLING_PORT}:8072"
@@ -53,6 +57,9 @@ services:
       - MINIO_SECRET_KEY=${MINIO_SECRET_KEY} # Reemplaza <SECRET_KEY> con tu clave secreta de MinIO
       - MINIO_BUCKET=odoo-bucket  # Nombre del bucket en MinIO donde se almacenarán los archivos
     volumes:
+      - ./odoo-data:/var/lib/odoo
       - ./addons:/mnt/extra-addons
       - ./etc:/etc/odoo
+#      - ./filestore:/mnt/minio  # Montar el bucket de MinIO en el filestore de Odoo
+
     restart: always
