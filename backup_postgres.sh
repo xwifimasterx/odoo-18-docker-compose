@@ -4,6 +4,16 @@
 # Creado por Tomas Castro. tomasecastro@gmail.com
 # 2023-04-11
 # Update 2025-02-06
+# Se puede crear backup de la base de datos Postgrest, y los parametros pueden ser desde dentro del script 
+# Como pasarlos por parametros, de esta forma podemos integrarlo en otros script, y ejecutar en cascada.
+# Se quiere incluir que lea el archivo .env de la instalacion del odoo y que tome los parametros. 
+# El .env debe estar en el mismo directorio que el script
+
+# En el host local debe estar instalalo el cliente de postgres, en este caso dejo la información postgres 15 para Debian 11 y 12
+# wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+# sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+# sudo apt-get update
+# sudo apt-get install postgresql-client-15
 
 # Definir valores predeterminados
 DEFAULT_USER="odoo"
@@ -16,8 +26,8 @@ DEFAULT_IP_SERVER="172.16.1.103"
 export PGPASSWORD="${1:-$DEFAULT_PGPASSWORD}"
 USER="${2:-$DEFAULT_USER}"
 DB_NAME="${3:-$DEFAULT_DB_NAME}"
-BACKUP_PATH="${5:-$DEFAULT_BACKUP_PATH}"
-IP_SERVER="${6:-$DEFAULT_IP_SERVER}"
+BACKUP_PATH="${4:-$DEFAULT_BACKUP_PATH}"
+IP_SERVER="${5:-$DEFAULT_IP_SERVER}"
 
 # Definir la fecha y el nombre del archivo de respaldo
 DATE=$(date +%Y%m%d_%H%M%S)
