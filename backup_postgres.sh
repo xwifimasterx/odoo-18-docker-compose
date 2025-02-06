@@ -108,7 +108,7 @@ restaurar() {
 
     # Restaurar la base de datos
     echo "Restaurando la base de datos '$DB_NAME' desde el archivo $RESTORE_SQL_FILE..."
-    psql -h $IP_SERVER -U $USER -d $DB_NAME < "$RESTORE_SQL_FILE"
+    psql -h $IP_SERVER -U $USER -d $DB_NAME < "$RESTORE_SQL_FILE" > /dev/null 2>&1
 
     # Eliminar archivo temporal descomprimido
     rm "$RESTORE_SQL_FILE"
@@ -125,5 +125,6 @@ else
     echo "Uso: $0 [restaurar]"
     echo "  Sin parámetros: realiza un backup."
     echo "  Con 'restaurar': restaura un backup previamente realizado."
+    echo "  Si se quiere utilizar parametros al realizar el backup se deben indicar"
     exit 1
 fi
