@@ -2,45 +2,68 @@
 
 # Configuración de PostgreSQL
 PGUSER="odoo"
-PGPASSWORD="tu_contraseña"
-PGDATABASE="nombre_de_tu_bd"
-PGHOST="localhost"
-BACKUP_DIR="./backup_odoo"
+PGPASSWORD="D2NIpV3hjYb0b9Bs"
+PGDATABASE="tempo"
+PGHOST="172.16.1.103"
+BACKUP_DIR="./backup"
 MANIFEST_FILE="$BACKUP_DIR/manifest.json"
+PATH_ODOO="./odoo/etc"
 
-# Crear directorio de backup si no existe
+# Crear el directorio de respaldo si no existe
 mkdir -p "$BACKUP_DIR"
 
-# Obtener versión de Odoo
-ODOO_VERSION=$(psql -h "$PGHOST" -U "$PGUSER" -d "$PGDATABASE" -t -c "SELECT latest_version FROM ir_module_module WHERE name='base';" | tr -d '[:space:]')
+# Obtener la versión de Odoo desde el archivo de configuración
+ODOO_CONF_PATH="$PATH_ODOO/odoo.conf"
+ODOO_VERSION=$(grep -oP '(?<=version = ).*' "$ODOO_CONF_PATH")
 
-# Obtener lista de módulos instalados
-MODULES=$(psql -h "$PGHOST" -U "$PGUSER" -d "$PGDATABASE" -t -c "SELECT name FROM ir_module_module WHERE state='installed';" | awk '{print "\""$1"\","}' | sed '$s/,$//')
+# Obtener la versión de PostgreSQL
+PG_VERSION=$(psql -U "$PGUSER" -h "$PGHOST" -d "$PGDATABASE" -c "SHOW server_version;" -t | tr -d '[:space:]')
 
-# Obtener archivos en el filestore
-FILESTORE_DIR="$HOME/.local/share/Odoo/filestore/$PGDATABASE"
-if [ -d "$FILESTORE_DIR" ]; then
-    FILES=$(find "$FILESTORE_DIR" -type f | sed 's/^/"/;s/$/",/' | sed '$s/,$//')
-else
-    FILES="[]"
-fi
+# Obtener la lista de módulos instalados y sus versiones
+MODULES=$(psql -U "$PGUSER" -h "$PGHOST" -d "$PGDATABASE" -t -c "
+    SELECT
+        module.name,
+        latest_version.version
+    FROM
+        ir_module_module AS module
+    JOIN
+        ir_module_module_version AS latest_version
+    ON
+        module.id = latest_version.module_id
+    WHERE
+        module.state = 'installed';
+")
 
-# Obtener fecha actual
-BACKUP_DATE=$(date +"%Y-%m-%d %H:%M:%S")
+# Formatear la lista de módulos en JSON
+MODULES_JSON=$(echo "$MODULES" | awk '
+BEGIN {
+    print "{"
+}
+{
+    printf "    \"%s\": \"%s\",\n", $1, $2
+}
+END {
+    print "}"
+}')
 
-# Crear el archivo JSON
+# Crear el archivo manifest.json
 cat <<EOF > "$MANIFEST_FILE"
 {
-    "odoo_version": "$ODOO_VERSION",
-    "database": "$PGDATABASE",
-    "backup_date": "$BACKUP_DATE",
-    "modules_installed": [
-        $MODULES
+    "odoo_dump": "1",
+    "db_name": "$PGDATABASE",
+    "version": "$ODOO_VERSION",
+    "version_info": [
+        17,
+        0,
+        0,
+        "final",
+        0,
+        ""
     ],
-    "filestore_files": [
-        $FILES
-    ]
+    "major_version": "17.0",
+    "pg_version": "$PG_VERSION",
+    "modules": $MODULES_JSON
 }
 EOF
 
-echo "Manifest generado en: $MANIFEST_FILE"
+echo "Archivo manifest.json generado en $MANIFEST_FILE"
