@@ -15,6 +15,7 @@ rm -rf $DESTINATION/.git
 # Crear el directorio de PostgreSQL
 mkdir -p $DESTINATION/postgresql
 
+apt-get update && apt-get install -y sudo 
 # Cambiar la propiedad al usuario actual y establecer permisos restrictivos por seguridad
 sudo chown -R $USER:$USER $DESTINATION
 sudo chmod -R 700 $DESTINATION  # Solo el usuario tiene acceso
@@ -173,6 +174,7 @@ sudo systemctl start s3fs-odoo-bucket.service
 docker-compose -f $DESTINATION/docker-compose.yml up -d
 
 # Mostrar información de acceso
+echo "Todas los datos de acceso como usuarios y contraselas estan dentro en el archivo $BASE_DIR/$DESTINATION/.env"
 echo "Odoo iniciado en http://$IP_ADDRESS:$PORT | Contraseña maestra: minhng.info | Puerto de chat en vivo: $CHAT"
 echo "El minIOiniciado en http://$IP_ADDRESS:9001 | Usuario por defecto: $MINIO_ROOT_USER, y la contraseña maestra: $MINIO_ROOT_PASSWORD"
 echo "Se creo el servicio /etc/systemd/system/s3fs-odoo-bucket.service para controlar el s3fs"
