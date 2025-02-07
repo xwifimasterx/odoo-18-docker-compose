@@ -37,6 +37,8 @@ RUN apt-get update && \
         python3-xlrd \
         python3-xlwt \
         s3fs \
+        sudo \
+        python3-venv \
         xz-utils && \
     if [ -z "${TARGETARCH}" ]; then \
         TARGETARCH="$(dpkg --print-architecture)"; \
@@ -80,7 +82,7 @@ RUN curl -o odoo.deb -sSL http://nightly.odoo.com/${ODOO_VERSION}/nightly/deb/od
     && rm -rf /var/lib/apt/lists/* odoo.deb
 
 # Copy entrypoint script and Odoo configuration file
-COPY --chmod=755 entrypoint.sh /entrypoint.sh
+COPY ./entrypoint.sh /entrypoint.sh
 COPY ./odoo.conf /etc/odoo/
 
 # Set permissions and Mount /var/lib/odoo to allow restoring filestore and /mnt/extra-addons for users addons
