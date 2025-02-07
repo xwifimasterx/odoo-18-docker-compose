@@ -35,8 +35,8 @@ services:
 
   odoo:
     build:
-      context: .
-      dockerfile: .odoo/build/DockerfileOdoo
+      context: ./odoo/build/
+      dockerfile: DockerfileOdoo
     container_name: odoo17_app
     depends_on:
       - db
@@ -60,7 +60,8 @@ services:
       - ./odoo/odoo-data:/var/lib/odoo
       - ./odoo/addons:/mnt/extra-addons
       - ./odoo/etc:/etc/odoo
-      - ./entrypoint.sh:/entrypoint.sh
+      - ./odoo/build/entrypoint.sh:/entrypoint.sh
 #      - ./filestore:/mnt/minio  # Montar el bucket de MinIO en el filestore de Odoo
+    command: /entrypoint.sh
 
     restart: always
