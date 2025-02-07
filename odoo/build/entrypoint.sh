@@ -11,20 +11,22 @@ set -e
 # Instalar paquetes de Python necesarios
 pip3 install --upgrade pip
 pip3 install -r /etc/odoo/requirements.txt
+pip install dropbox
+
 
 # Montar el bucket de MinIO utilizando s3fs
-if [ -z "$MINIO_ACCESS_KEY" ] || [ -z "$MINIO_SECRET_KEY" ] || [ -z "$MINIO_URL" ] || [ -z "$MINIO_BUCKET" ]; then
-    echo "Las variables de entorno MINIO_ACCESS_KEY, MINIO_SECRET_KEY, MINIO_URL y MINIO_BUCKET deben estar definidas."
-    exit 1
-fi
+#if [ -z "$MINIO_ACCESS_KEY" ] || [ -z "$MINIO_SECRET_KEY" ] || [ -z "$MINIO_URL" ] || [ -z "$MINIO_BUCKET" ]; then
+#    echo "Las variables de entorno MINIO_ACCESS_KEY, MINIO_SECRET_KEY, MINIO_URL y MINIO_BUCKET deben estar definidas."
+#    exit 1
+#fi
 
 # Crear el archivo de contraseñas para s3fs
-echo "$MINIO_ACCESS_KEY:$MINIO_SECRET_KEY" > /etc/odoo/.passwd-s3fs
-chmod 600 /etc/odoo/.passwd-s3fs
+#echo "$MINIO_ACCESS_KEY:$MINIO_SECRET_KEY" > /etc/odoo/.passwd-s3fs
+#chmod 600 /etc/odoo/.passwd-s3fs
 
 # Crear el punto de montaje si no existe
 #mkdir -p /mnt/minio
-chown odoo:odoo /mnt/minio
+#chown odoo:odoo /mnt/minio
 
 # Montar el bucket de MinIO
 #s3fs $MINIO_BUCKET /mnt/minio -o passwd_file=/root/.passwd-s3fs -o url=$MINIO_URL -o use_path_request_style -o allow_other

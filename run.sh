@@ -88,8 +88,7 @@ fi
 find $DESTINATION -type f -exec chmod 644 {} \;
 find $DESTINATION -type d -exec chmod 755 {} \;
 
-# Establecer permisos 777 para los directorios específicos
-chmod -R 777 $DESTINATION/addons $DESTINATION/etc $DESTINATION/postgresql
+
 
 # Ejecutar Odoo
 docker-compose -f $DESTINATION/docker-compose.yml up -d minio
@@ -129,8 +128,6 @@ if ! mc admin user list myminio | grep -q "odoo-user"; then
     mc admin accesskey create myminio/ odoo-user --access-key $MINIO_ACCESS_KEY --secret-key $MINIO_SECRET_KEY
 fi
 
-
-
 # Obtener la dirección IP local
 IP_ADDRESS=$(hostname -I | awk '{print $1}')
 
@@ -169,6 +166,9 @@ sudo systemctl enable s3fs-odoo-bucket.service
 
 # Iniciar el servicio
 sudo systemctl start s3fs-odoo-bucket.service
+
+# Establecer permisos 777 para los directorios específicos
+chmod -R 777 $DESTINATION/addons $DESTINATION/etc $DESTINATION/postgresql
 
 # Ejecutar Odoo
 docker-compose -f $DESTINATION/docker-compose.yml up -d
