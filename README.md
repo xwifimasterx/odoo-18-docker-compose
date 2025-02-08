@@ -1,10 +1,10 @@
-Esta implementación esta basada en la realizada por https://github.com/minhng92/odoo-17-docker-compose. 
-Cambios realizados, actualizacion de la version del docker utilizado.
-Cambios en el run.sh para mis ajustes personales.
-Cambio en la forma de organizar el despliegue de los dockerfile.
-Implementacion de [mi](https://min.io/?), para mejorar el control de las imagenes y la portabilidad de la implementacion entre servidores.
-Se hace el cambio para postgres 15 porque es lo recomendado en la documentacion de odoo.
-Se creo el archivo de variables de entorno para mejorar la organización y seguriodad de los Docker.
+* Esta implementación esta basada en la realizada por https://github.com/minhng92/odoo-17-docker-compose. 
+* Cambios realizados, actualizacion de la version del docker utilizado.
+* Cambios en el run.sh para mis ajustes personales.
+* Cambio en la forma de organizar el despliegue de los dockerfile.
+* Implementacion de [mi](https://min.io/?), para mejorar el control de las imagenes y la portabilidad de la implementacion entre servidores.
+* Se hace el cambio para postgres 15 porque es lo recomendado en la documentacion de odoo.
+* Se creo el archivo de variables de entorno para mejorar la organización y seguriodad de los Docker.
 
 ---
 # Instalación de Odoo 17.0 con un solo comando (Admite múltiples instancias de Odoo en un solo servidor).

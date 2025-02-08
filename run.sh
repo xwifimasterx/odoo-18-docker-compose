@@ -168,7 +168,7 @@ sudo systemctl enable s3fs-odoo-bucket.service
 sudo systemctl start s3fs-odoo-bucket.service
 
 # Establecer permisos 777 para los directorios específicos
-chmod -R 777 $DESTINATION/addons $DESTINATION/etc $DESTINATION/postgresql
+chmod -R 777 $DESTINATION/odoo/addons $DESTINATION/odoo/etc $DESTINATION/odoo/postgresql
 
 # Ejecutar Odoo
 docker-compose -f $DESTINATION/docker-compose.yml up -d
