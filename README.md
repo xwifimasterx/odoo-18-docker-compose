@@ -2,7 +2,7 @@
 * Cambios realizados, actualizacion de la version del docker utilizado.
 * Cambios en el run.sh para mis ajustes personales.
 * Cambio en la forma de organizar el despliegue de los dockerfile.
-* Implementacion de [mi](https://min.io/?), para mejorar el control de las imagenes y la portabilidad de la implementacion entre servidores.
+* Implementacion de [MinIO](https://min.io/?), para mejorar el control de las imagenes y la portabilidad de la implementacion entre servidores.
 * Se hace el cambio para postgres 15 porque es lo recomendado en la documentacion de odoo.
 * Se creo el archivo de variables de entorno para mejorar la organización y seguriodad de los Docker.
 
@@ -11,7 +11,7 @@
 
 ## Instalación rápida
 
-Instale [docker](https://docs.docker.com/get-docker/) y [docker-compose](https://docs.docker.com/compose/install/) por su cuenta, luego ejecute lo siguiente para configurar la primera instancia de Odoo en `localhost:10017` (contraseña maestra predeterminada: `minhng.info`):
+Instale [docker](https://docs.docker.com/get-docker/) y [docker-compose](https://docs.docker.com/compose/install/) por su cuenta, luego ejecute lo siguiente para configurar la primera instancia de Odoo en `localhost:10017` (contraseña maestra predeterminada: **`minhng.info`**):
 - Si desea iniciar el servidor con un puerto diferente, cambie **10017** por otro valor en **docker-compose.yml** dentro del directorio principal, el puerto por defecto del odoo es el 8069, para esta implementacion se utiliza el puerto 10017, para ser expuesto por el docker, si lo desea puede cambiarlo en la siguiente linea.
 - Recuerde que puede modificar el docker-compose.yml para ajustar las configuraciones de sus docker una vez instalado.
 
@@ -156,6 +156,14 @@ Nota. Esta guia no cubre el escenario donde se tenga bases de datos respaldadas 
 * sudo rm /etc/systemd/system/s3fs-odoo-bucket.service
 * sudo systemctl daemon-reload
 * sudo apt remove --purge s3fs
+
+## Herramientas o addons adicionales
+
+Para mejorar la funcionalida implementamos el addons:
+  
+https://apps.odoo.com/apps/modules/17.0/auto_database_backup, y su explicación esta en este video https://www.youtube.com/watch?v=Q2yMZyYjuTI  
+Lo importante es que despues de instalarlo. hay que ir a Shcedule action y en auto_database_backup, activar la opción para que se ejecute.  
+Tambien hay que tener una carpeta que pueda ser accesible desde el host, para poder extraer los backup a un sitio seguro si usamos la opción de backup local.  
 
 ## docker-compose.yml
 

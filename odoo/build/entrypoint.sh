@@ -11,8 +11,7 @@ set -e
 # Instalar paquetes de Python necesarios
 pip3 install --upgrade pip
 pip3 install -r /etc/odoo/requirements.txt
-pip install dropbox
-
+pip3 install dropbox pyncclient nextcloud-api-wrapper boto3 paramiko
 
 # Montar el bucket de MinIO utilizando s3fs
 #if [ -z "$MINIO_ACCESS_KEY" ] || [ -z "$MINIO_SECRET_KEY" ] || [ -z "$MINIO_URL" ] || [ -z "$MINIO_BUCKET" ]; then

@@ -15,7 +15,7 @@ rm -rf $DESTINATION/.git
 # Crear el directorio de PostgreSQL
 mkdir -p $DESTINATION/postgresql
 
-apt-get update && apt-get install -y sudo 
+apt-get update && apt-get install -y sudo unzip
 # Cambiar la propiedad al usuario actual y establecer permisos restrictivos por seguridad
 sudo chown -R $USER:$USER $DESTINATION
 sudo chmod -R 700 $DESTINATION  # Solo el usuario tiene acceso
@@ -166,6 +166,9 @@ sudo systemctl enable s3fs-odoo-bucket.service
 
 # Iniciar el servicio
 sudo systemctl start s3fs-odoo-bucket.service
+
+unzip -x $DESTINATION/odoo/addons/*.zip
+rm -r $DESTINATION/odoo/addons/*.zip
 
 # Establecer permisos 777 para los directorios específicos
 chmod -R 777 $DESTINATION/odoo/addons $DESTINATION/odoo/etc $DESTINATION/odoo/postgresql
