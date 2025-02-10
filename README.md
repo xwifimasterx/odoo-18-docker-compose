@@ -6,7 +6,10 @@
 * Se hace el cambio para postgres 15 porque es lo recomendado en la documentacion de odoo.
 * Se creo el archivo de variables de entorno para mejorar la organización y seguriodad de los Docker.
 * Se incluye el addons de auto backup, incluyendo la modificacion en el entrypoint.sh, para incluyir durante la instalación las dependencias de python del modulo (el modulo debe ser instalado y configurado manualmente despues de completarse la instalacion).
+<<<<<<< HEAD
 
+=======
+>>>>>>> 41ff2a7e81fa03c90854811914b34951db2983f9
 
 ---
 # Instalación de Odoo 17.0 con un solo comando (Admite múltiples instancias de Odoo en un solo servidor).
