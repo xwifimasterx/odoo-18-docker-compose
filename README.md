@@ -5,6 +5,8 @@
 * Implementacion de [MinIO](https://min.io/?), para mejorar el control de las imagenes y la portabilidad de la implementacion entre servidores.
 * Se hace el cambio para postgres 15 porque es lo recomendado en la documentacion de odoo.
 * Se creo el archivo de variables de entorno para mejorar la organización y seguriodad de los Docker.
+* Se incluye el addons de auto backup, incluyendo la modificacion en el entrypoint.sh, para incluyir durante la instalación las dependencias de python del modulo (el modulo debe ser instalado y configurado manualmente despues de completarse la instalacion).
+
 
 ---
 # Instalación de Odoo 17.0 con un solo comando (Admite múltiples instancias de Odoo en un solo servidor).

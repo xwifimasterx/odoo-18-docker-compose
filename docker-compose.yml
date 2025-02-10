@@ -49,7 +49,7 @@ services:
       - "${ODOO_LONGPOLLING_PORT}:8072"
     tty: true
     environment:
-      - HOST=db
+      - HOST=postgres_db
       - USER=${POSTGRES_USER}
       - PASSWORD=${POSTGRES_PASSWORD}
       - TZ=${TZ}
