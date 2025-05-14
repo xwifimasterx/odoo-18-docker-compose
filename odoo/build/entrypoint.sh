@@ -11,32 +11,7 @@ set -e
 # Instalar paquetes de Python necesarios
 pip3 install --upgrade pip
 pip3 install -r /etc/odoo/requirements.txt
-pip3 install dropbox pyncclient nextcloud-api-wrapper boto3 paramiko
-
-# Montar el bucket de MinIO utilizando s3fs
-#if [ -z "$MINIO_ACCESS_KEY" ] || [ -z "$MINIO_SECRET_KEY" ] || [ -z "$MINIO_URL" ] || [ -z "$MINIO_BUCKET" ]; then
-#    echo "Las variables de entorno MINIO_ACCESS_KEY, MINIO_SECRET_KEY, MINIO_URL y MINIO_BUCKET deben estar definidas."
-#    exit 1
-#fi
-
-# Crear el archivo de contraseñas para s3fs
-#echo "$MINIO_ACCESS_KEY:$MINIO_SECRET_KEY" > /etc/odoo/.passwd-s3fs
-#chmod 600 /etc/odoo/.passwd-s3fs
-
-# Crear el punto de montaje si no existe
-#mkdir -p /mnt/minio
-#chown odoo:odoo /mnt/minio
-
-# Montar el bucket de MinIO
-#s3fs $MINIO_BUCKET /mnt/minio -o passwd_file=/root/.passwd-s3fs -o url=$MINIO_URL -o use_path_request_style -o allow_other
-
-# Verificar si el montaje fue exitoso
-#if mountpoint -q /mnt/minio; then
-#    echo "El bucket de MinIO se montó correctamente en /mnt/minio."
-#else
-#    echo "Error al montar el bucket de MinIO."
-#    exit 1
-#fi
+pip3 install geopy dropbox pyncclient nextcloud-api-wrapper boto3 paramiko minio
 
 # Configuración de Odoo
 DB_ARGS=()

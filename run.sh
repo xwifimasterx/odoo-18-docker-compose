@@ -9,7 +9,7 @@ USER=$(whoami)
 GROUP=$(id -gn $USER)
 
 # Clonar el directorio de Odoo
-git clone --depth=1 https://github.com/tomasecastro/odoo-17-docker-compose $DESTINATION
+git clone --depth=1 https://github.com/tomasecastro/odoo-18-docker-compose $DESTINATION
 rm -rf $DESTINATION/.git
 
 # Crear el directorio de PostgreSQL

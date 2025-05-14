@@ -1,4 +1,4 @@
-* Esta implementación esta basada en la realizada por https://github.com/minhng92/odoo-17-docker-compose. 
+* Esta implementación esta basada en la realizada por https://github.com/minhng92/odoo-18-docker-compose. 
 * Cambios realizados, actualizacion de la version del docker utilizado.
 * Cambios en el run.sh para mis ajustes personales.
 * Cambio en la forma de organizar el despliegue de los dockerfile.
@@ -21,12 +21,12 @@ Instale [docker](https://docs.docker.com/get-docker/) y [docker-compose](https:/
 - Recuerde que puede modificar el docker-compose.yml para ajustar las configuraciones de sus docker una vez instalado.
 
 ``` bash
-curl -s https://raw.githubusercontent.com/tomasecastro/odoo-17-docker-compose/master/run.sh | sudo bash -s odoo-one 10017 20017
+curl -s https://raw.githubusercontent.com/tomasecastro/odoo-18-docker-compose/master/run.sh | sudo bash -s odoo-one 10017 20017
 ```
 y/o ejecute lo siguiente para configurar otra instancia de Odoo en `localhost:11017` (contraseña maestra predeterminada: `minhng.info`):
 
 ``` bash
-curl -s https://raw.githubusercontent.com/tomasecastro/odoo-17-docker-compose/master/run.sh | sudo bash -s odoo-two 11017 21017
+curl -s https://raw.githubusercontent.com/tomasecastro/odoo-18-docker-compose/master/run.sh | sudo bash -s odoo-two 11017 21017
 ```
 
 Algunos argumentos:

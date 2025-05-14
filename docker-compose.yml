@@ -37,8 +37,8 @@ services:
 #    build:
 #      context: ./odoo/build/
 #      dockerfile: DockerfileOdoo
-    image: odoo:17
-    container_name: odoo17_app
+    image: ${ODOO_IMAGE}
+    container_name: odoo18_app
     depends_on:
       - db
       - minio
