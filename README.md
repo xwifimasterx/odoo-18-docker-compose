@@ -12,7 +12,7 @@
 >>>>>>> 41ff2a7e81fa03c90854811914b34951db2983f9
 
 ---
-# Instalación de Odoo 17.0 con un solo comando (Admite múltiples instancias de Odoo en un solo servidor).
+# Instalación de Odoo 18.0 con un solo comando (Admite múltiples instancias de Odoo en un solo servidor).
 
 ## Instalación rápida
 
@@ -21,7 +21,7 @@ Instale [docker](https://docs.docker.com/get-docker/) y [docker-compose](https:/
 - Recuerde que puede modificar el docker-compose.yml para ajustar las configuraciones de sus docker una vez instalado.
 
 ``` bash
-curl -s https://raw.githubusercontent.com/tomasecastro/odoo-18-docker-compose/master/run.sh | sudo bash -s odoo-one 10017 20017
+curl -s https://raw.githubusercontent.com/tomasecastro/odoo-18-docker-compose/master/run.sh | sudo bash -s odoo-one 10018 20018
 ```
 y/o ejecute lo siguiente para configurar otra instancia de Odoo en `localhost:11017` (contraseña maestra predeterminada: `minhng.info`):
 
@@ -48,7 +48,7 @@ Iniciar el contenedor:
 ``` sh
 docker-compose up
 ```
-Luego abra `localhost:10017` o `IP_EQUIPO_DONDE_EJECUTA_EL_DOCKER:10017` para acceder a Odoo 17.
+Luego abra `localhost:10017` o `IP_EQUIPO_DONDE_EJECUTA_EL_DOCKER:10017` para acceder a Odoo 18.
 
 - **Si tiene problemas de permisos**, cambie los permisos de la carpeta para asegurarse de que el contenedor pueda acceder al directorio, en el equipo que ejecuta los docker:
 
@@ -166,7 +166,7 @@ Nota. Esta guia no cubre el escenario donde se tenga bases de datos respaldadas 
 
 Para mejorar la funcionalida implementamos el addons:
   
-https://apps.odoo.com/apps/modules/17.0/auto_database_backup, y su explicación esta en este video https://www.youtube.com/watch?v=Q2yMZyYjuTI  
+https://apps.odoo.com/apps/modules/18.0/auto_database_backup, y su explicación esta en este video https://www.youtube.com/watch?v=Q2yMZyYjuTI  
 Lo importante es que despues de instalarlo. hay que ir a Shcedule action y en auto_database_backup, activar la opción para que se ejecute.  
 Tambien hay que tener una carpeta que pueda ser accesible desde el host, para poder extraer los backup a un sitio seguro si usamos la opción de backup local.  
 
@@ -175,7 +175,7 @@ Tambien hay que tener una carpeta que pueda ser accesible desde el host, para po
 * odoo:17
 * postgres:15
 
-## Capturas de pantalla de Odoo 17.0 después de una instalación exitosa.
+## Capturas de pantalla de Odoo 18.0 después de una instalación exitosa.
 
 <img src="screenshots/odoo-17-welcome-screenshot.png" width="50%">
 
